@@ -19,7 +19,9 @@ const initialConfig = `study:
   `
 
 type Schedule struct {
-	Tasks map[string]Task
+	Tasks map[string]*Task
+
+	RunWg sync.WaitGroup
 }
 
 var (
@@ -27,18 +29,16 @@ var (
 	path    = home + "/.foca/schedule.yaml"
 )
 
-// Run forces all the tasks to run
-func (s Schedule) Run() {
-	wg := sync.WaitGroup{}
-
+func (s *Schedule) Run() {
 	for _, t := range s.Tasks {
-		wg.Add(1)
-		go func(t Task) {
+		s.RunWg.Add(1)
+		go func(t *Task) {
 			t.Run()
-			wg.Done()
+			t.RunWg.Wait()
+
+			s.RunWg.Done()
 		}(t)
 	}
-	wg.Wait()
 }
 
 func Init() error {

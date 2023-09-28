@@ -10,21 +10,20 @@ type Task struct {
 	Cron     string
 	Desc     string    `yaml:"description"`
 	Commands []Command `yaml:"commands"`
+
+	RunWg sync.WaitGroup
 }
 
-func (t Task) Run() {
-	wg := sync.WaitGroup{}
-
+func (t *Task) Run() {
 	for _, c := range t.Commands {
-		wg.Add(1)
+		t.RunWg.Add(1)
 		go func(c Command) {
 			if err := c.Run(); err != nil {
 				log.Printf("error running the command: \"%s\": %s\n", c.TODO, err)
 			} else {
 				log.Printf("command \"%s\" finished successfuly!\n", c.Name())
 			}
-			wg.Done()
+			t.RunWg.Done()
 		}(c)
 	}
-	wg.Wait()
 }
