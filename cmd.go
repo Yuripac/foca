@@ -1,4 +1,4 @@
-package foca
+package main
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/cobra"
 	"github.com/yuripac/foca/schedule"
-	"github.com/yuripac/foca/sysd"
+	"github.com/yuripac/foca/service"
 )
 
 var (
@@ -85,7 +85,7 @@ func StartCron(cmd *cobra.Command, args []string) {
 }
 
 func StartService(cmd *cobra.Command, args []string) {
-	s := sysd.Service{
+	s := service.Service{
 		User:      u.Username,
 		ExecStart: u.HomeDir + "/go/bin/foca start-cron",
 		Path:      u.HomeDir + "/.config/systemd/user/foca.service",

@@ -1,4 +1,4 @@
-package sysd
+package service
 
 import (
 	"fmt"
