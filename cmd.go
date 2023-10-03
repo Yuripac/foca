@@ -15,6 +15,12 @@ import (
 var (
 	u, _    = user.Current()
 	schPath = u.HomeDir + "/.foca/schedule.yaml"
+
+	s = service.Service{
+		User:      u.Username,
+		ExecStart: u.HomeDir + "/go/bin/foca start-cron",
+		Path:      u.HomeDir + "/.config/systemd/user/foca.service",
+	}
 )
 
 func Command() *cobra.Command {
@@ -45,13 +51,13 @@ func Command() *cobra.Command {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "stop-service",
 		Short: "Stop the service",
-		// Run:   StopService,
+		Run:   StopService,
 	})
 
 	return &rootCmd
 }
 
-func Init(cmd *cobra.Command, args []string) {
+func Init(_ *cobra.Command, _ []string) {
 	if err := schedule.Init(schPath); err != nil {
 		fmt.Println("error on init:", err)
 
@@ -59,7 +65,7 @@ func Init(cmd *cobra.Command, args []string) {
 	}
 }
 
-func StartCron(cmd *cobra.Command, args []string) {
+func StartCron(_ *cobra.Command, _ []string) {
 	ctx := context.Background()
 
 	s, err := schedule.Load(schPath)
@@ -84,13 +90,7 @@ func StartCron(cmd *cobra.Command, args []string) {
 	<-ctx.Done()
 }
 
-func StartService(cmd *cobra.Command, args []string) {
-	s := service.Service{
-		User:      u.Username,
-		ExecStart: u.HomeDir + "/go/bin/foca start-cron",
-		Path:      u.HomeDir + "/.config/systemd/user/foca.service",
-	}
-
+func StartService(_ *cobra.Command, _ []string) {
 	if err := s.Import(); err != nil {
 		fmt.Println("error on start-service:", err)
 
@@ -99,6 +99,14 @@ func StartService(cmd *cobra.Command, args []string) {
 
 	if err := s.Start(); err != nil {
 		fmt.Println("error on start-service:", err)
+
+		os.Exit(1)
+	}
+}
+
+func StopService(_ *cobra.Command, _ []string) {
+	if err := s.Stop(); err != nil {
+		fmt.Println("error on stop-service:", err)
 
 		os.Exit(1)
 	}

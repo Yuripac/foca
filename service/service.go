@@ -48,6 +48,12 @@ func (s *Service) Start() error {
 	return cmd.Run()
 }
 
+func (s *Service) Stop() error {
+	cmd := exec.Command("systemctl", "--user", "stop", s.Filename())
+
+	return cmd.Run()
+}
+
 func (s *Service) Filename() string {
 	split := strings.Split(s.Path, "/")
 	return split[len(split)-1]
