@@ -1,20 +1,16 @@
 package main
 
 import (
-	"github.com/yuripac/foca/schedule"
+	"log"
+	"os"
+
+	"github.com/yuripac/foca/cmd/foca"
 )
 
 func main() {
-	err := schedule.Init()
-	if err != nil {
-		panic(err)
-	}
+	if err := foca.Command().Execute(); err != nil {
+		log.Println("Something went wrong...")
 
-	s, err := schedule.Load()
-	if err != nil {
-		panic(err)
+		os.Exit(1)
 	}
-
-	s.Run()
-	s.RunWg.Wait()
 }

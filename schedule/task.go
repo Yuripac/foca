@@ -21,7 +21,7 @@ func (t *Task) Run() {
 			if err := c.Run(); err != nil {
 				log.Printf("error running the command: \"%s\": %s\n", c.TODO, err)
 			} else {
-				log.Printf("command \"%s\" finished successfuly!\n", c.Name())
+				log.Printf("command \"%s\" finished successfuly!\n", c)
 			}
 			t.RunWg.Done()
 		}(c)

@@ -23,7 +23,7 @@ func (c Command) Run() error {
 	return nil
 }
 
-func (c Command) Name() string {
+func (c Command) String() string {
 	if c.Title != "" {
 		return c.Title
 	}

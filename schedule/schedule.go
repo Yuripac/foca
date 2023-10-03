@@ -1,6 +1,7 @@
 package schedule
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"sync"
@@ -8,26 +9,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const initialConfig = `study:
-  title: Study focus!!!
-  cron: 0 18 * * *
-  commands:
-  - title: notion
-    command: xdg-open https://notion.so
-  - command: code ~/my_project
-    workspace: 2
-  `
-
 type Schedule struct {
 	Tasks map[string]*Task
 
 	RunWg sync.WaitGroup
 }
 
-var (
-	home, _ = os.UserHomeDir()
-	path    = home + "/.foca/schedule.yaml"
-)
+const configPath = "config/schedule_example.yaml"
 
 func (s *Schedule) Run() {
 	for _, t := range s.Tasks {
@@ -41,30 +29,30 @@ func (s *Schedule) Run() {
 	}
 }
 
-func Init() error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		dir := strings.Split(path, "/")
-		dir = dir[0:(len(dir) - 1)]
+func Init(path string) error {
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		return fmt.Errorf("file \"%s\" already exists", path)
+	}
 
-		if err := os.MkdirAll(strings.Join(dir, "/"), 0777); err != nil {
-			return err
-		}
+	dir := strings.Split(path, "/")
+	dir = dir[0:(len(dir) - 1)]
+	if err := os.MkdirAll(strings.Join(dir, "/"), 0777); err != nil {
+		return err
+	}
 
-		f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0777)
-		if err != nil {
-			return err
-		}
-		defer f.Close()
+	text, err := os.ReadFile(configPath)
+	if err != nil {
+		return err
+	}
 
-		if _, err := f.Write([]byte(initialConfig)); err != nil {
-			return err
-		}
+	if err = os.WriteFile(path, text, 0777); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func Load() (*Schedule, error) {
+func Load(path string) (*Schedule, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err

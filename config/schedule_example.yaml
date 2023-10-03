@@ -1,0 +1,6 @@
+study:
+  title: Study focus!!!
+  cron: "* * * * *"
+  commands:
+  - title: Call to study
+    command: echo "it's time to study!"
