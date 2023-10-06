@@ -1,7 +1,7 @@
 package schedule
 
 import (
-	"log"
+	"fmt"
 	"sync"
 )
 
@@ -19,9 +19,9 @@ func (t *Task) Run() {
 		t.RunWg.Add(1)
 		go func(c Command) {
 			if err := c.Run(); err != nil {
-				log.Printf("error running the command: \"%s\": %s\n", c.TODO, err)
+				fmt.Printf("error running the command: \"%s\": %s\n", c.TODO, err)
 			} else {
-				log.Printf("command \"%s\" finished successfuly!\n", c)
+				fmt.Printf("command \"%s\" finished successfuly!\n", c)
 			}
 			t.RunWg.Done()
 		}(c)

@@ -1,13 +1,15 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
+
+	"github.com/yuripac/foca/cmd"
 )
 
 func main() {
-	if err := Command().Execute(); err != nil {
-		log.Println("Something went wrong...")
+	if err := cmd.RootCmd().Execute(); err != nil {
+		fmt.Println("Something went wrong...")
 
 		os.Exit(1)
 	}

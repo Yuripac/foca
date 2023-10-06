@@ -2,10 +2,13 @@ package schedule
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"strings"
 	"sync"
 
+	"github.com/robfig/cron/v3"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,6 +30,24 @@ func (s *Schedule) Run() {
 			s.RunWg.Done()
 		}(t)
 	}
+}
+
+func (s *Schedule) Cron() *cron.Cron {
+	c := cron.New()
+	for name, t := range s.Tasks {
+		t := t
+		c.AddFunc(t.Cron, func() {
+			// t.Run()
+			// t.RunWg.Wait()
+
+			home, _ := os.UserHomeDir()
+			cmd := exec.Command(home+"/go/bin/foca", "terminal-exec-task", name)
+			if err := cmd.Run(); err != nil {
+				log.Println("error on terminal-exec-task:", err)
+			}
+		})
+	}
+	return c
 }
 
 func Init(path string) error {
