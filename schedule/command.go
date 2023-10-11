@@ -7,7 +7,7 @@ import (
 )
 
 type Command struct {
-	Title     string
+	Title	  string
 	TODO      string `yaml:"command"`
 	Workspace int
 }

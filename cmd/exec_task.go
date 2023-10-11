@@ -22,28 +22,27 @@ func ExecTaskCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			for _, a := range args {
-				t := s.Tasks[a]
-				if confirm {
-					fmt.Printf("A task \"%s\" será executada a seguir, deseja continuar? [Y/n]: ", a)
-					var input string
-					if _, err := fmt.Scanln(&input); err != nil {
-						input = "Y"
-					}
-
-					if slices.Contains([]string{"y", "Y"}, input) {
-						t.Run()
-						t.RunWg.Wait()
-					}
-				} else {
+			for _, name := range args {
+				t := s.Tasks[name]
+				if !confirm || askConfirm(name) {
 					t.Run()
 					t.RunWg.Wait()
 				}
-
 			}
 		},
 	}
 	c.Flags().BoolVar(&confirm, "confirm", true, "Pede confirmação")
 
 	return &c
+}
+
+func askConfirm(t string) bool {
+	fmt.Printf("The task \"%s\" will be executed, do you want to continue? [Y/n]: ", t)
+	var input string
+
+	if _, err := fmt.Scanln(&input); err != nil {
+		input = "Y"
+	}
+	
+	return slices.Contains([]string{"y", "Y"}, input)
 }

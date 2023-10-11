@@ -9,7 +9,7 @@ import (
 
 var (
 	u, _    = user.Current()
-	schPath = u.HomeDir + "/.foca/schedule.yaml"
+	schPath = u.HomeDir + "/.config/foca/schedule.yaml"
 
 	s = service.Service{
 		User:      u.Username,

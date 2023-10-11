@@ -1,7 +1,7 @@
 package schedule
 
 import (
-	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"os/exec"
@@ -37,9 +37,6 @@ func (s *Schedule) Cron() *cron.Cron {
 	for name, t := range s.Tasks {
 		t := t
 		c.AddFunc(t.Cron, func() {
-			// t.Run()
-			// t.RunWg.Wait()
-
 			home, _ := os.UserHomeDir()
 			cmd := exec.Command(home+"/go/bin/foca", "terminal-exec-task", name)
 			if err := cmd.Run(); err != nil {
@@ -52,7 +49,7 @@ func (s *Schedule) Cron() *cron.Cron {
 
 func Init(path string) error {
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		return fmt.Errorf("file \"%s\" already exists", path)
+		return fs.ErrExist
 	}
 
 	dir := strings.Split(path, "/")

@@ -48,7 +48,7 @@ func (s *Service) Start() error {
 	return cmd.Run()
 }
 
-func (s *Service) Stop() error {
+func (s Service) Stop() error {
 	cmd := exec.Command("systemctl", "--user", "stop", s.Filename())
 
 	return cmd.Run()
