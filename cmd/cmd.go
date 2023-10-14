@@ -4,14 +4,14 @@ import (
 	"os/user"
 
 	"github.com/spf13/cobra"
-	"github.com/yuripac/foca/service"
+	"github.com/yuripac/foca/system"
 )
 
 var (
 	u, _    = user.Current()
 	schPath = u.HomeDir + "/.config/foca/schedule.yaml"
 
-	s = service.Service{
+	s = system.Service{
 		User:      u.Username,
 		ExecStart: u.HomeDir + "/go/bin/foca start-cron",
 		Path:      u.HomeDir + "/.config/systemd/user/foca.service",

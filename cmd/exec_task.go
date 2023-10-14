@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"slices"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/yuripac/foca/schedule"
@@ -44,5 +44,5 @@ func askConfirm(t string) bool {
 		input = "Y"
 	}
 	
-	return slices.Contains([]string{"y", "Y"}, input)
+	return strings.ToUpper(input) == "Y"
 }
