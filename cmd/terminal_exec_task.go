@@ -14,12 +14,12 @@ func TerminalExecTaskCmd() *cobra.Command {
 		Use:   "terminal-exec-task",
 		Short: "Open a terminal for task execution confirmation",
 		Run: func(_ *cobra.Command, args []string) {
-			execTask := fmt.Sprintf(
+			task := fmt.Sprintf(
 				u.HomeDir+"/go/bin/foca exec-task %s; sleep inifity",
 				strings.Join(args, " "),
 			)
 
-			cmd, err := system.TerminalCmd(execTask)
+			cmd, err := system.TerminalCmd(task)
 			if err != nil {
 				fmt.Println(err)
 
@@ -27,7 +27,9 @@ func TerminalExecTaskCmd() *cobra.Command {
 			}
 
 			if err := cmd.Run(); err != nil {
-				fmt.Println("Error ao inicializar o terminal: ", err)
+				fmt.Println("Error starting a new terminal", err)
+
+				os.Exit(1)
 			}
 		},
 	}

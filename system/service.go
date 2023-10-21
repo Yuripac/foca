@@ -34,7 +34,6 @@ func (s *Service) Import() error {
 	if err != nil {
 		return err
 	}
-
 	return t.Execute(f, s)
 }
 

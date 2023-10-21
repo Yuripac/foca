@@ -1,6 +1,5 @@
 package schedule
  
-
 import (
 	"os/exec"
 	"strings"

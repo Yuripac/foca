@@ -40,7 +40,7 @@ func Terminal() (string, error) {
 			return n, nil
 		}
 	}
-	return "", fmt.Errorf("no terminal was found")
+	return "", fmt.Errorf("no supported terminal was found")
 }
 
 func TerminalCmd(command string) (*exec.Cmd, error) {
