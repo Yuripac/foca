@@ -20,7 +20,7 @@ func InitCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			editCmd := exec.Command("nvim", schPath)
+			editCmd := exec.Command("vi", schPath)
 			editCmd.Stdin, editCmd.Stdout, editCmd.Stderr = os.Stdin, os.Stdout, os.Stderr
 
 			if err := editCmd.Run(); err != nil {
